@@ -23,7 +23,9 @@
   --shadow-deep: 0 20px 60px rgba(0, 0, 0, 0.6);
   --ff-serif: 'Cormorant Garamond', Georgia, serif;
   --ff-sans: 'Jost', system-ui, sans-serif;
-  --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ===== RESET ===== */
@@ -131,13 +133,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   padding: 1.2rem 2.5rem;
-  transition: background 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+  transition: background 0.5s cubic-bezier(0.16,1,0.3,1), padding 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease;
 }
 .navbar.scrolled {
-  background: rgba(10, 8, 6, 0.92);
-  backdrop-filter: blur(16px);
+  background: rgba(10, 8, 6, 0.94);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
   padding: 0.85rem 2.5rem;
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.4);
 }
 .nav-inner {
   max-width: 1200px; margin: 0 auto;
@@ -221,6 +225,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: relative; z-index: 3;
   text-align: center; padding: 0 1.5rem;
   max-width: 860px;
+  animation: heroEntrance 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes heroEntrance {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .hero-eyebrow {
   font-size: 0.75rem; font-weight: 600;
@@ -312,13 +321,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex; align-items: flex-start; gap: 0.9rem;
   padding: 1.2rem; background: var(--bg-card);
   border: 1px solid var(--border); border-radius: var(--radius);
-  transition: var(--transition);
+  transition: border-color var(--transition), background var(--transition), box-shadow var(--transition), transform var(--transition);
+  will-change: transform;
 }
 .stat-swiggy { grid-column: span 2; }
 .stat-card:hover {
   border-color: var(--border-hover);
   background: var(--bg-card-hover);
   box-shadow: var(--shadow-gold);
+  transform: translateY(-2px);
 }
 .stat-icon { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
 .stat-icon svg { color: var(--gold); }
@@ -378,14 +389,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
-.menu-grid.active { display: grid; animation: fadeIn 0.4s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.menu-grid.active { display: grid; animation: fadeInUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 .menu-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: var(--transition);
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  will-change: transform;
 }
 .menu-card:hover {
   border-color: var(--border-hover);
@@ -396,8 +408,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: relative; aspect-ratio: 1;
   overflow: hidden;
 }
-.menu-img-wrap img { transition: transform 0.6s ease; }
-.menu-card:hover .menu-img-wrap img { transform: scale(1.07); }
+.menu-img-wrap img { transition: transform 0.7s cubic-bezier(0.16,1,0.3,1); will-change: transform; }
+.menu-card:hover .menu-img-wrap img { transform: scale(1.06); }
 .menu-img-hover {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(10,8,6,0.6) 0%, transparent 50%);
@@ -446,16 +458,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   grid-row: span 2;
   aspect-ratio: unset;
 }
-.gallery-item img { transition: transform 0.7s ease; }
-.gallery-item:hover img { transform: scale(1.06); }
+.gallery-item img { transition: transform 0.8s cubic-bezier(0.16,1,0.3,1); will-change: transform; }
+.gallery-item:hover img { transform: scale(1.07); }
 .gallery-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(10,8,6,0.8) 0%, rgba(10,8,6,0.1) 60%);
+  background: linear-gradient(to top, rgba(10,8,6,0.82) 0%, rgba(10,8,6,0.08) 65%);
   display: flex; align-items: flex-end;
   padding: 1.4rem;
-  opacity: 0; transition: opacity 0.4s ease;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1);
 }
 .gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-overlay span { transform: translateY(6px); transition: transform 0.45s cubic-bezier(0.16,1,0.3,1); }
+.gallery-item:hover .gallery-overlay span { transform: translateY(0); }
 .gallery-overlay span {
   font-family: var(--ff-serif); font-style: italic;
   font-size: 1.1rem; color: var(--gold);
@@ -481,7 +496,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  will-change: transform;
   position: relative;
   overflow: hidden;
 }
@@ -584,8 +600,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ===== REVEAL ANIMATION ===== */
 [data-reveal] {
-  opacity: 0; transform: translateY(28px);
-  transition: opacity 0.75s ease, transform 0.75s ease;
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  will-change: opacity, transform;
 }
 [data-reveal].revealed { opacity: 1; transform: translateY(0); }
 
